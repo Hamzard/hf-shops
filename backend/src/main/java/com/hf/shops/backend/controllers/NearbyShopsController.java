@@ -45,18 +45,11 @@ public class NearbyShopsController {
         LocalDateTime timeref = LocalDateTime.now();
         List<Shop> nearby_shops_buffer = shopService.findByLocationNear(lon,lat, p, s).stream()
                 //filter out disliked shops
-                .filter(x -> user_disliked.containsKey(x.getId()) ?
-                        Duration.between(user_disliked.get(x.getId()), timeref).toHours() >= 2: true)
+                .filter(x -> !user_disliked.containsKey(x.getId()) || Duration.between(user_disliked.get(x.getId()), timeref).toHours() >= 2)
                 //filter out prefered shops
                 .filter(x -> !user_preferred.containsKey(x.getId()))
                 .collect(Collectors.toList());
 
-//        //filter out disliked shops
-//                .filter(x -> user_disliked.containsKey(x.getId()) ?
-//                Duration.between(user_disliked.get(x.getId()), timeref).toHours() >= 2: true)
-//                //filter out prefered shops
-//                .filter(x -> !user_preferred.containsKey(x.getId()))
-//                .collect(Collectors.toList());
         return nearby_shops_buffer;
     }
 
