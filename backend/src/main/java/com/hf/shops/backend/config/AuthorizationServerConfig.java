@@ -3,6 +3,7 @@ package com.hf.shops.backend.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -18,17 +19,21 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserDetailsService userDetailsService;
+
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(authenticationManager);
+        endpoints.userDetailsService(userDetailsService);
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient("my-trusted-client")
-                .authorizedGrantTypes("client_credentials", "password")
+                .authorizedGrantTypes("client_credentials", "password","refresh_token")
                 .authorities("ROLE_CLIENT","ROLE_TRUSTED_CLIENT").scopes("read","write","trust")
                 .resourceIds("oauth2-resource").accessTokenValiditySeconds(5000).secret("secret");
     }
@@ -37,6 +42,4 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.checkTokenAccess("isAuthenticated()");
     }
-
-
 }
