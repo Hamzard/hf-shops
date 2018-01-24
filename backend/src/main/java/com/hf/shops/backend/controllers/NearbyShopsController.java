@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/nearby")
+@RequestMapping("/nearby")
 public class NearbyShopsController {
 
     private ShopService shopService;
@@ -35,29 +35,26 @@ public class NearbyShopsController {
         // p: page
         // s: number of elements that must be in the page
         //get authenticated user
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = userDetails.getUsername();
-        User user = userService.findByUsername(username);
+        try {
+            CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            String username = userDetails.getUsername();
+            User user = userService.findByUsername(username);
 
-        //get nearby shops and filter user's preferred and disliked shops out
-        LinkedHashMap<String, Shop> user_preferred = user.getPreferredShops();
-        LinkedHashMap<String, LocalDateTime> user_disliked = user.getDislikedShops();
-        LocalDateTime timeref = LocalDateTime.now();
-        List<Shop> nearby_shops_buffer = shopService.findByLocationNear(lon,lat, p, s).stream()
-                //filter out disliked shops
-                .filter(x -> !user_disliked.containsKey(x.getId()) || Duration.between(user_disliked.get(x.getId()), timeref).toHours() >= 2)
-                //filter out prefered shops
-                .filter(x -> !user_preferred.containsKey(x.getId()))
-                .collect(Collectors.toList());
-
-        // List<Shop> nearby_shops_buffer = shopService.findByLocationNear(lon,lat, p, s).stream()
-        // //filter out disliked shops
-        // .filter(x -> !user_disliked.containsKey(x.getId()) || Duration.between(user_disliked.get(x.getId()), timeref).toHours() >= 2)
-        // //filter out prefered shops
-        // .filter(x -> !user_preferred.containsKey(x.getId()))
-        // .collect(Collectors.toList());
-
-        return nearby_shops_buffer;
+            //get nearby shops and filter user's preferred and disliked shops out
+            LinkedHashMap<String, Shop> user_preferred = user.getPreferredShops();
+            LinkedHashMap<String, LocalDateTime> user_disliked = user.getDislikedShops();
+            LocalDateTime timeref = LocalDateTime.now();
+            List<Shop> nearby_shops_buffer = shopService.findByLocationNear(lon,lat, p, s).stream()
+                    //filter out disliked shops
+                    .filter(x -> user_disliked.containsKey(x.getId()) ?
+                            Duration.between(user_disliked.get(x.getId()), timeref).toHours() >= 2: true)
+                    //filter out prefered shops
+                    .filter(x -> !user_preferred.containsKey(x.getId()))
+                    .collect(Collectors.toList());
+            return nearby_shops_buffer;
+        } catch (ClassCastException e) {
+            return shopService.findByLocationNear(lon,lat, p, s);
+        }
     }
 
     @DeleteMapping("/{id}")

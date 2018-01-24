@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/preferred")
+@RequestMapping("/preferred")
 public class PreferredShopsController {
 
     private ShopService shopService;
