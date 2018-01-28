@@ -19,7 +19,7 @@ public class User {
     private String password;
     private List<Role> roles;
 
-    @DBRef
+    //@DBRef
     private Set<Shop> preferredShops;
     private LinkedHashMap<String, LocalDateTime> dislikedShops;
 

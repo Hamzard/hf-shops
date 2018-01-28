@@ -2,6 +2,7 @@ package com.hf.shops.backend.controllers;
 
 import com.hf.shops.backend.entities.Shop;
 import com.hf.shops.backend.services.ShopService;
+import com.hf.shops.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,22 +16,18 @@ import java.util.List;
 @RequestMapping("/public")
 public class PublicController {
 
-    private ShopService shopService;
+    private UserService userService;
 
     @Autowired
-    public PublicController(ShopService shopService) {
-        this.shopService = shopService;
+    public PublicController(UserService userService) {
+        this.userService = userService;
     }
-    
+
     @GetMapping
-    public ResponseEntity<?> getNearbyShopsPublic(@RequestParam double lon , @RequestParam double lat, @RequestParam int p, @RequestParam int s){
-        // lon: longitude
-        // lat: latitude
-        // p: page
-        // s: number of elements that must be in the page
-        List<Shop> nearby_shops_buffer = shopService.findByLocationNear(lon,lat, p, s);
-        if(nearby_shops_buffer.size() > 0){
-            return ResponseEntity.ok().body(nearby_shops_buffer);
+    public ResponseEntity<?> fun(){
+        List<Shop> most_liked_shops_buffer = this.userService.getMostLikedShops();
+        if(most_liked_shops_buffer.size() > 0){
+            return ResponseEntity.ok().body(most_liked_shops_buffer);
         }else{
             return ResponseEntity.noContent().build();
         }
