@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -42,10 +43,9 @@ public class UserService {
         return this.userRepository.findByUsername(username);
     }
 
-    public List<Shop> getPreferredShops(String username){
+    public Set<Shop> getPreferredShops(String username){
         User user_tmp = this.userRepository.findByUsername(username);
-        LinkedHashMap<String,Shop> map = user_tmp.getPreferredShops();
-        return new ArrayList<>(map.values());
+        return user_tmp.getPreferredShops();
     }
 
     public void dislike(String username, String id){
@@ -58,16 +58,16 @@ public class UserService {
 
     public void addToPreferred(String username, Shop shop){
         User user_tmp = this.userRepository.findByUsername(username);
-        LinkedHashMap<String,Shop> preferredShops = user_tmp.getPreferredShops();
-        preferredShops.putIfAbsent(shop.getId(), shop);
+        Set<Shop> preferredShops = user_tmp.getPreferredShops();
+        preferredShops.add(shop);
         user_tmp.setPreferredShops(preferredShops);
         this.userRepository.save(user_tmp);
     }
 
-    public void removeFromPreferred(String username, String id){
+    public void removeFromPreferred(String username, Shop shop){
         User user_tmp = this.userRepository.findByUsername(username);
-        LinkedHashMap<String,Shop> preferredShops = user_tmp.getPreferredShops();
-        preferredShops.remove(id);
+        Set<Shop> preferredShops = user_tmp.getPreferredShops();
+        preferredShops.remove(shop);
         user_tmp.setPreferredShops(preferredShops);
         this.userRepository.save(user_tmp);
     }

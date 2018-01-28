@@ -13,6 +13,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,7 +42,7 @@ public class NearbyShopsController {
             User user = userService.findByUsername(username);
 
             //get nearby shops and filter user's preferred and disliked shops out
-            LinkedHashMap<String, Shop> user_preferred = user.getPreferredShops();
+            Set<Shop> user_preferred = user.getPreferredShops();
             LinkedHashMap<String, LocalDateTime> user_disliked = user.getDislikedShops();
             LocalDateTime timeref = LocalDateTime.now();
             List<Shop> nearby_shops_buffer = shopService.findByLocationNear(lon,lat, p, s).stream()
@@ -49,7 +50,7 @@ public class NearbyShopsController {
                     .filter(x -> user_disliked.containsKey(x.getId()) ?
                             Duration.between(user_disliked.get(x.getId()), timeref).toHours() >= 2: true)
                     //filter out prefered shops
-                    .filter(x -> !user_preferred.containsKey(x.getId()))
+                    .filter(x -> !user_preferred.contains(x))
                     .collect(Collectors.toList());
             return nearby_shops_buffer;
         } catch (ClassCastException e) {

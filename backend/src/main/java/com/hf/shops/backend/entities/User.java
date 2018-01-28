@@ -3,11 +3,11 @@ package com.hf.shops.backend.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 @Document(collection = "users")
 public class User {
@@ -19,7 +19,8 @@ public class User {
     private String password;
     private List<Role> roles;
 
-    private LinkedHashMap<String,Shop> preferredShops;
+    @DBRef
+    private Set<Shop> preferredShops;
     private LinkedHashMap<String, LocalDateTime> dislikedShops;
 
     public User(){super();}
@@ -28,7 +29,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.roles = roles;
-        this.preferredShops = new LinkedHashMap<String,Shop>();
+        this.preferredShops = new LinkedHashSet<>();
         this.dislikedShops = new LinkedHashMap<String, LocalDateTime>();
     }
 
@@ -60,11 +61,11 @@ public class User {
         this.roles = roles;
     }
 
-    public LinkedHashMap<String, Shop> getPreferredShops() {
+    public Set<Shop> getPreferredShops() {
         return preferredShops;
     }
 
-    public void setPreferredShops(LinkedHashMap<String, Shop> preferredShops) {
+    public void setPreferredShops(Set<Shop> preferredShops) {
         this.preferredShops = preferredShops;
     }
 

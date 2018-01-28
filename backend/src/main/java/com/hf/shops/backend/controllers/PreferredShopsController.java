@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/preferred")
@@ -24,7 +25,7 @@ public class PreferredShopsController {
     }
 
     @GetMapping
-    public List<Shop> getPreferredShops() {
+    public Set<Shop> getPreferredShops() {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
         return this.userService.getPreferredShops(username);
@@ -42,6 +43,7 @@ public class PreferredShopsController {
     public void removeFromPreferred(@PathVariable("id") String id) {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
-        userService.removeFromPreferred(username, id);
+        Shop shop = shopService.findById(id);
+        userService.removeFromPreferred(username, shop);
     }
 }

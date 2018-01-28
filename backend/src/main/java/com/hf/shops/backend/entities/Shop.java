@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Objects;
+
 @Document(collection = "shops")
 public class Shop {
     @Id
@@ -27,10 +29,37 @@ public class Shop {
         this.location = location;
     }
 
-    public String getId() { return id; }
-    public String getPicture() { return picture; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-    public String getCity() { return city; }
-    public GeoJsonPoint getLocation() { return location; }
+    public String getId() {
+        return id;
+    }
+    public String getPicture() {
+        return picture;
+    }
+    public String getName() {
+        return name;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public String getCity() {
+        return city;
+    }
+    public GeoJsonPoint getLocation() {
+        return location;
+    }
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof Shop)) {
+            return false;
+        }
+        Shop shop = (Shop) o;
+        return id.equals(shop.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
