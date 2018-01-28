@@ -5,6 +5,7 @@ import com.hf.shops.backend.entities.Shop;
 import com.hf.shops.backend.services.ShopService;
 import com.hf.shops.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,25 +26,32 @@ public class PreferredShopsController {
     }
 
     @GetMapping
-    public Set<Shop> getPreferredShops() {
+    public ResponseEntity<?> getPreferredShops() {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
-        return this.userService.getPreferredShops(username);
+        Set<Shop> preferred_shops_buffer = this.userService.getPreferredShops(username);
+        if(preferred_shops_buffer.size() > 0){
+            return ResponseEntity.ok().body(preferred_shops_buffer);
+        }else{
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @PutMapping("/{id}")
-    public void addToPreferred(@PathVariable("id") String id) {
+    public ResponseEntity<?> addToPreferred(@PathVariable("id") String id) {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
         Shop shop = shopService.findById(id);
         userService.addToPreferred(username, shop);
+        return ResponseEntity.ok().body("Shop added");
     }
 
     @DeleteMapping("/{id}")
-    public void removeFromPreferred(@PathVariable("id") String id) {
+    public ResponseEntity<?> removeFromPreferred(@PathVariable("id") String id) {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = userDetails.getUsername();
         Shop shop = shopService.findById(id);
         userService.removeFromPreferred(username, shop);
+        return ResponseEntity.ok().body("Shop removed");
     }
 }
