@@ -2,7 +2,7 @@ package com.hf.shops.backend.controllers;
 
 import com.hf.shops.backend.entities.Role;
 import com.hf.shops.backend.entities.User;
-import com.hf.shops.backend.entities.UserRegistration;
+import com.hf.shops.backend.pojos.UserRegistration;
 import com.hf.shops.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
 @RestController
 public class RegistrationController {

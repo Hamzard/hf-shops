@@ -1,4 +1,4 @@
-package com.hf.shops.backend.entities;
+package com.hf.shops.backend.pojos;
 
 public class UserRegistration {
     private String username;

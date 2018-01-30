@@ -1,6 +1,8 @@
-package com.hf.shops.backend.entities;
+package com.hf.shops.backend.pojos;
 
-public class LikedShop {
+import com.hf.shops.backend.entities.Shop;
+
+public class LikedShop implements Comparable{
 
     private Shop id;
     private float value;
@@ -26,5 +28,10 @@ public class LikedShop {
 
     public void setValue(float value) {
         this.value = value;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.value < ((LikedShop) o).getValue() ? -1 : 1;
     }
 }
