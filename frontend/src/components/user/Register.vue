@@ -96,7 +96,7 @@ export default {
     }
   },
   computed: {
-    comparePasswords() {
+    comparePasswords () {
       return this.password !== this.confirmPassword ? 'Passwords do not match' : true
     },
     isAuthenticated () {
@@ -106,7 +106,7 @@ export default {
       return this.$store.getters.error
     },
     validateForm () {
-      return this.valid && (this.password == this.confirmPassword)
+      return this.valid && (this.password === this.confirmPassword)
     }
   },
   watch: {

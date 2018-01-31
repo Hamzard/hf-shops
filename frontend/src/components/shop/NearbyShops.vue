@@ -26,7 +26,7 @@ export default {
   }),
   methods: {
     infiniteHandler ($state) {
-      this.$store.dispatch("loadNearbyShops")
+      this.$store.dispatch('loadNearbyShops')
       .then(data => {
         if (data.length > 0) {
           $state.loaded()
@@ -34,7 +34,7 @@ export default {
           $state.complete()
         }
       }, error => {
-          console.error(error)
+        console.error(error)
       })
     }
   },
