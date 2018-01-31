@@ -31,7 +31,7 @@ $ npm install
 $ npm start
 ```
 #### Notes
-* The frontend client runs on port 8080. If you wish to change it, be sure to also change it in `backend/src/main/java/../confing/CorsConfig.java` allowed origins.
+* The frontend client runs on port 8080. If you wish to change it, be sure to also change it in `backend/src/main/java/../config/CorsConfig.java` allowed origins.
 
 
 
